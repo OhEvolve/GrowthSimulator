@@ -1,4 +1,6 @@
 
+import numpy as np
+
 def linear_profile(nx,ny):
     """ Create a drug profile that peaks in middle """
     l = np.arange(0,nx)
