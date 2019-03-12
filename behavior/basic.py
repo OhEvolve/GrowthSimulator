@@ -2,6 +2,9 @@
 import types
 import numpy as np
 
+# coloring parameters
+bg_color = [0,0,0]
+
 # develop parameters (NOTE: this is mostly asethetic for the time being)
 base_develop_rate = 0.3
 max_develop_count = 3
@@ -16,7 +19,7 @@ base_mutation_magnitude =  0.1
 # METHODS FOR INITIALIZATION 
 
 # claimed traits
-trait_names = ['trait1','trait2','trait3']
+trait_names = ['resistance','mutation','fitness']
 trait_count = len(trait_names)
 
 def load_default_behavior(self):
@@ -27,13 +30,13 @@ def load_default_behavior(self):
 
     def mutate(self,x,y):
         """ Creates a new trait set """
-        dcolor = np.random.randint(0,3,trait_count)
+        dcolor = 0.2 - 0.4*np.random.random(3)
         new_color = self.traits[x,y,:] + dcolor
         return np.fmin(np.fmax(new_color,0),1)
         
-    def convert_color(self,trait):
+    def convert_color(self,x,y):
         """ Converts a trait into a distinct color """
-        return trait
+        return 1 - self.population[x,y]*(1 - self.traits[x,y,:])/max_develop_count
 
     # METHODS FOR SIMULATION DYNAMICS
 
@@ -49,7 +52,7 @@ def load_default_behavior(self):
         """ Return rate of mutation on growth """
         return base_mutation_rate
 
-    def resistance_rate(self,x,y,trait = None):
+    def resistance_rate(self,x,y,drug = None,trait = None):
         """ Returns probability colony resists the drug """
         return base_resistance_rate
 

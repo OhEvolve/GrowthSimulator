@@ -147,8 +147,8 @@ data = np.zeros((nx, ny, 1)) # colony density
 color = np.dstack((rgb*np.ones((nx,ny)) for rgb in starting_colony_state))
 drug_color = np.dstack((rgb*np.ones((nx,ny)) for rgb in drug_color))
 
-#drug_concentration = np.expand_dims(stepwise_profile(nx-1,ny-1,steps=5),axis=2)
-drug_concentration = np.expand_dims(linear_profile(nx-1,ny-1),axis=2)
+drug_concentration = np.expand_dims(stepwise_profile(nx-1,ny-1,steps=5),axis=2)
+#drug_concentration = np.expand_dims(linear_profile(nx-1,ny-1),axis=2)
 
 # setting up figure dimension & properties
 fig = plt.figure(figsize = (10,10))
