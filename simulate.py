@@ -8,7 +8,7 @@ from matplotlib import animation
 
 # custom libraries
 from drug_profiles import linear_profile,stepwise_profile
-from behavior.base import Behavior
+import behavior.base as behavior_base 
 
 diffs = [(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
 
@@ -28,7 +28,7 @@ class Simulator(object):
 
         self.initial_colonies = {}
 
-        self.behavior = Behavior()
+        self.behavior = behavior_base
 
         self.drug_profile = stepwise_profile(nx,ny)
     
@@ -38,8 +38,7 @@ class Simulator(object):
         self.trait_count = self.behavior.trait_count
         self.max_develop_count = self.behavior.max_develop_count
 
-        self.mutate = self.behavior.mutate # does this work?
-        self.dont_mutate = self.behavior.dont_mutate # does this work?
+        behavior_base.load_default_behavior(self)
 
     def start(self):
 
@@ -83,7 +82,7 @@ class Simulator(object):
                 continue
 
             # check if colony will develop
-            if np.random.random() < self.behavior.develop_rate:
+            if np.random.random() < self.develop_rate:
                 self._develop_colony(x,y)
 
         add_remove_from_set(self.developing_colonies,add_xys,remove_xys)
@@ -105,8 +104,8 @@ class Simulator(object):
 
                 is_available_moves = True
 
-                if np.random.random() < self.behavior.growth_rate(x,y):
-                    if np.random.random() < self.behavior.mutation_rate(x,y): # if mutation
+                if np.random.random() < self.growth_rate(x,y):
+                    if np.random.random() < self.mutation_rate(x,y): # if mutation
                         new_trait = self.mutate(x,y)
                     else: # no mutation
                         new_trait = self.dont_mutate(x,y)
@@ -188,7 +187,7 @@ class Simulator(object):
         """ Assign values to data matrices """
         self.population[x,y] = 1 
         self.traits[x,y,:] = new_trait
-        self.color[x,y,:] = self.behavior.color_conversion(new_trait) 
+        self.color[x,y,:] = self.convert_color(new_trait) 
 
         #self.developing_colonies.add((x,y))
         #self.growing_colonies.add((x,y))
